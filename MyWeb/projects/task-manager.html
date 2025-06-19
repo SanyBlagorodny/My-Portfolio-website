@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менеджер задач | Проект</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
+            padding: 3px;
+        }
+
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 1rem;
+            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
+            filter: blur(15px);
+            z-index: -1;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        .task-card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(100px, 100px) rotate(360deg); }
+        }
+
+        /* Стили для кнопки "Назад" */
+        .back-button {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-5px);
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            filter: blur(8px);
+        }
+
+        .back-button:hover::before {
+            opacity: 1;
+        }
+
+        /* Улучшенные анимации для карточек */
+        .task-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: calc(var(--delay) * 0.1s);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 3D эффект для изображения */
+        .gradient-border {
+            perspective: 1000px;
+        }
+
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .gradient-border:hover .card-3d {
+            transform: rotateY(15deg) rotateX(5deg);
+        }
+
+        /* Улучшенные плавающие элементы */
+        .floating-element {
+            filter: blur(30px);
+            opacity: 0.15;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 1), rgba(139, 92, 246, 0));
+        }
+
+        /* Анимация для технологических бейджей */
+        .tech-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: float 3s ease-in-out infinite;
+            animation-delay: calc(var(--delay) * 0.1s);
+        }
+
+        .tech-pill:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .tech-pill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-['Space_Grotesk']">
+    <!-- Кнопка "Назад" -->
+    <a href="../index.html#projects" class="back-button">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+
+    <div class="floating-elements">
+        <!-- Добавляем больше плавающих элементов -->
+        <div class="floating-element" style="width: 400px; height: 400px; top: -200px; left: -200px;"></div>
+        <div class="floating-element" style="width: 300px; height: 300px; bottom: -150px; right: -150px;"></div>
+        <div class="floating-element" style="width: 250px; height: 250px; top: 30%; left: 60%;"></div>
+        <div class="floating-element" style="width: 200px; height: 200px; top: 70%; left: 20%;"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="../index.html#projects" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+                    Портфолио
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 relative z-10">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+                Менеджер задач
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <div class="gradient-border">
+                    <div class="card-3d">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692" 
+                             alt="Task Manager Project" 
+                             class="w-full rounded-lg">
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+                        О проекте
+                    </h2>
+                    <p class="text-gray-300 mb-6 text-lg leading-relaxed">
+                        Современный менеджер задач с функцией drag-and-drop, совместной работой и 
+                        автоматизацией рабочих процессов. Интуитивно понятный интерфейс позволяет 
+                        легко организовывать задачи и отслеживать прогресс.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <div class="task-card p-4 rounded-lg">
+                            <h3 class="font-bold mb-2 text-indigo-400">Организация</h3>
+                            <p class="text-gray-400">Канбан-доски, списки, календарь</p>
+                        </div>
+                        <div class="task-card p-4 rounded-lg">
+                            <h3 class="font-bold mb-2 text-indigo-400">Совместная работа</h3>
+                            <p class="text-gray-400">Комментарии, чаты, уведомления</p>
+                        </div>
+                        <div class="task-card p-4 rounded-lg">
+                            <h3 class="font-bold mb-2 text-indigo-400">Автоматизация</h3>
+                            <p class="text-gray-400">Шаблоны, триггеры, интеграции</p>
+                        </div>
+                        <div class="task-card p-4 rounded-lg">
+                            <h3 class="font-bold mb-2 text-indigo-400">Аналитика</h3>
+                            <p class="text-gray-400">Отчеты, графики, метрики</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+                        Технологии:
+                    </h3>
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">React</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">TypeScript</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">Node.js</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">MongoDB</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">WebSocket</span>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <a href="https://github.com/SanyBlagorodny/task-manager" target="_blank" 
+                           class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 
+                                  text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105">
+                            GitHub
+                        </a>
+                        <a href="https://task-manager-demo.example.com" target="_blank" 
+                           class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full 
+                                  transition-all transform hover:scale-105 border border-indigo-500">
+                            Демо
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Существующие GSAP анимации
+
+        // Добавляем задержку для карточек
+        document.querySelectorAll('.task-card').forEach((card, index) => {
+            card.style.setProperty('--delay', index);
+        });
+
+        // Добавляем задержку для технологических бейджей
+        document.querySelectorAll('.tech-pill').forEach((pill, index) => {
+            pill.style.setProperty('--delay', index);
+        });
+
+        // Улучшенная анимация плавающих элементов
+        gsap.to('.floating-element', {
+            x: 'random(-100, 100)',
+            y: 'random(-100, 100)',
+            rotation: 'random(-180, 180)',
+            duration: 'random(20, 30)',
+            repeat: -1,
+            yoyo: true,
+            ease: 'none',
+            stagger: {
+                amount: 4,
+                from: 'random'
+            }
+        });
+
+        // Параллакс эффект для карточки с изображением
+        const gradientBorder = document.querySelector('.gradient-border');
+        gradientBorder.addEventListener('mousemove', (e) => {
+            const card = gradientBorder.querySelector('.card-3d');
+            const rect = gradientBorder.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            gsap.to(card, {
+                rotateX: rotateX,
+                rotateY: rotateY,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+
+        gradientBorder.addEventListener('mouseleave', () => {
+            const card = gradientBorder.querySelector('.card-3d');
+            gsap.to(card, {
+                rotateX: 0,
+                rotateY: 0,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+    </script>
+</body>
+</html> 
