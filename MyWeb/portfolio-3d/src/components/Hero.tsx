@@ -1,6 +1,8 @@
+import React from 'react';
+
 const Hero = () => {
   return (
-    <section id="home" className="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section id="home" className="hero-gradient min-h-screen w-full flex items-center justify-center relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-12 md:mb-0">

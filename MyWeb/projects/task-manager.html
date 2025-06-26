@@ -5,76 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Менеджер задач | Проект</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Удаляем Space Grotesk, добавляем Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
-        .card-3d {
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
-        }
-
-        .card-3d:hover {
-            transform: rotateY(10deg) rotateX(5deg);
-        }
-
-        .gradient-border {
-            position: relative;
-            border-radius: 1rem;
-            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
-            padding: 3px;
-        }
-
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 1rem;
-            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
-            filter: blur(15px);
-            z-index: -1;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        .gradient-border:hover::before {
-            opacity: 1;
-        }
-
-        .task-card {
-            background: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .task-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(99, 102, 241, 0.5);
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .floating-element {
-            position: absolute;
-            background: linear-gradient(45deg, #6366f1, #8b5cf6);
-            border-radius: 50%;
-            filter: blur(20px);
-            opacity: 0.1;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(100px, 100px) rotate(360deg); }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(to bottom, #0f0f13, #1a1b2e);
         }
 
         /* Стили для кнопки "Назад" */
@@ -128,8 +65,39 @@
             opacity: 1;
         }
 
-        /* Улучшенные анимации для карточек */
-        .task-card {
+        /* Градиентная рамка */
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
+            padding: 3px;
+            perspective: 1000px;
+        }
+
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 1rem;
+            background: linear-gradient(60deg, #6366f1, #8b5cf6, #ec4899);
+            filter: blur(15px);
+            z-index: -1;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        /* Карточки с эффектом стекла */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s ease forwards;
@@ -143,11 +111,13 @@
             }
         }
 
-        /* 3D эффект для изображения */
-        .gradient-border {
-            perspective: 1000px;
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
         }
 
+        /* 3D эффект для изображения */
         .card-3d {
             transform-style: preserve-3d;
             transition: transform 0.5s ease;
@@ -157,14 +127,17 @@
             transform: rotateY(15deg) rotateX(5deg);
         }
 
-        /* Улучшенные плавающие элементы */
+        /* Плавающие элементы */
         .floating-element {
-            filter: blur(30px);
-            opacity: 0.15;
-            background: radial-gradient(circle at center, rgba(99, 102, 241, 1), rgba(139, 92, 246, 0));
+            position: absolute;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.1;
+            z-index: -1;
         }
 
-        /* Анимация для технологических бейджей */
+        /* Технологические бейджи */
         .tech-pill {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -199,7 +172,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white font-['Space_Grotesk']">
+<body class="bg-gray-900 text-white">
     <!-- Кнопка "Назад" -->
     <a href="../index.html#projects" class="back-button">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -227,66 +200,80 @@
 
     <main class="pt-24 pb-16 relative z-10">
         <div class="container mx-auto px-6">
-            <h1 class="text-4xl md:text-6xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+            <!-- Заголовок -->
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
                 Менеджер задач
             </h1>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-                <div class="gradient-border">
-                    <div class="card-3d">
-                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692" 
-                             alt="Task Manager Project" 
-                             class="w-full rounded-lg">
+                <div class="gradient-border flex items-center justify-center" style="position: relative;">
+                    <div style="position: absolute; inset: 0; z-index: 1; pointer-events: none;">
+                        <div style="
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 0.75rem;
+                            background: radial-gradient(ellipse at center, #a5b4fc55 0%, #6366f100 80%);
+                        "></div>
+                    </div>
+                    <div class="card-3d" style="position: relative; z-index: 2; width: 100%;">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692"
+                             alt="Task Manager Project"
+                             class="w-full rounded-xl block">
+                        <!-- Фон под картинкой -->
+                        <div style="
+                            position: absolute;
+                            inset: 0;
+                            border-radius: 0.75rem;
+                            background: radial-gradient(ellipse at center, #a5b4fc55 0%, #6366f100 80%);
+                            z-index: -1;
+                            pointer-events: none;
+                        "></div>
                     </div>
                 </div>
-                
                 <div>
-                    <h2 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+                    <h2 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                         О проекте
                     </h2>
-                    <p class="text-gray-300 mb-6 text-lg leading-relaxed">
+                    <p class="text-gray-300 mb-6 text-lg leading-relaxed font-normal">
                         Современный менеджер задач с функцией drag-and-drop, совместной работой и 
                         автоматизацией рабочих процессов. Интуитивно понятный интерфейс позволяет 
                         легко организовывать задачи и отслеживать прогресс.
                     </p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        <div class="task-card p-4 rounded-lg">
-                            <h3 class="font-bold mb-2 text-indigo-400">Организация</h3>
-                            <p class="text-gray-400">Канбан-доски, списки, календарь</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="font-semibold mb-2 text-indigo-400 text-lg">Организация</h3>
+                            <p class="text-gray-400 text-base">Канбан-доски, списки, календарь</p>
                         </div>
-                        <div class="task-card p-4 rounded-lg">
-                            <h3 class="font-bold mb-2 text-indigo-400">Совместная работа</h3>
-                            <p class="text-gray-400">Комментарии, чаты, уведомления</p>
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="font-semibold mb-2 text-indigo-400 text-lg">Совместная работа</h3>
+                            <p class="text-gray-400 text-base">Комментарии, чаты, уведомления</p>
                         </div>
-                        <div class="task-card p-4 rounded-lg">
-                            <h3 class="font-bold mb-2 text-indigo-400">Автоматизация</h3>
-                            <p class="text-gray-400">Шаблоны, триггеры, интеграции</p>
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="font-semibold mb-2 text-indigo-400 text-lg">Автоматизация</h3>
+                            <p class="text-gray-400 text-base">Шаблоны, триггеры, интеграции</p>
                         </div>
-                        <div class="task-card p-4 rounded-lg">
-                            <h3 class="font-bold mb-2 text-indigo-400">Аналитика</h3>
-                            <p class="text-gray-400">Отчеты, графики, метрики</p>
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="font-semibold mb-2 text-indigo-400 text-lg">Аналитика</h3>
+                            <p class="text-gray-400 text-base">Отчеты, графики, метрики</p>
                         </div>
                     </div>
-
-                    <h3 class="text-xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+                    <h3 class="text-xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                         Технологии:
                     </h3>
                     <div class="flex flex-wrap gap-3 mb-8">
-                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">React</span>
-                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">TypeScript</span>
-                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">Node.js</span>
-                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">MongoDB</span>
-                        <span class="tech-pill px-4 py-2 rounded-full text-sm relative overflow-hidden">WebSocket</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm font-medium relative overflow-hidden">React</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm font-medium relative overflow-hidden">TypeScript</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm font-medium relative overflow-hidden">Node.js</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm font-medium relative overflow-hidden">MongoDB</span>
+                        <span class="tech-pill px-4 py-2 rounded-full text-sm font-medium relative overflow-hidden">WebSocket</span>
                     </div>
 
                     <div class="flex gap-4">
-                        <a href="https://github.com/SanyBlagorodny/task-manager" target="_blank" 
+                        <a href="https://github.com/SanyBlagorodny/glass-card er" target="_blank" 
                            class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 
                                   text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105">
                             GitHub
                         </a>
-                        <a href="https://task-manager-demo.example.com" target="_blank" 
+                        <a href="https://glass-card er-demo.example.com" target="_blank" 
                            class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full 
                                   transition-all transform hover:scale-105 border border-indigo-500">
                             Демо
@@ -298,10 +285,8 @@
     </main>
 
     <script>
-        // Существующие GSAP анимации
-
         // Добавляем задержку для карточек
-        document.querySelectorAll('.task-card').forEach((card, index) => {
+        document.querySelectorAll('.glass-card').forEach((card, index) => {
             card.style.setProperty('--delay', index);
         });
 
@@ -310,10 +295,10 @@
             pill.style.setProperty('--delay', index);
         });
 
-        // Улучшенная анимация плавающих элементов
+        // Анимация плавающих элементов
         gsap.to('.floating-element', {
-            x: 'random(-100, 100)',
             y: 'random(-100, 100)',
+            x: 'random(-100, 100)',
             rotation: 'random(-180, 180)',
             duration: 'random(20, 30)',
             repeat: -1,
@@ -357,4 +342,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

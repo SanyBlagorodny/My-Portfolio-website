@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             background: linear-gradient(to bottom, #0f0f13, #1a1b2e);
         }
 
@@ -110,6 +110,12 @@
             }
         }
 
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
         /* 3D эффект для изображения */
         .card-3d {
             transform-style: preserve-3d;
@@ -134,13 +140,16 @@
         .tech-pill {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
             animation: float 3s ease-in-out infinite;
             animation-delay: calc(var(--delay) * 0.1s);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .tech-pill:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .tech-pill::before {
@@ -154,6 +163,11 @@
 
         @keyframes shine {
             100% { transform: translateX(100%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
