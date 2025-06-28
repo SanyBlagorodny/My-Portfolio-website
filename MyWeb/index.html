@@ -222,19 +222,28 @@
         .custom-cursor {
             width: 20px;
             height: 20px;
-            border: 2px solid #6366f1;
+            border: 2.5px solid #FF4FBE;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+            box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33;
+            background: rgba(255, 79, 190, 0.10);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s, background 0.3s;
+            animation: cursor-jelly-glow 2s infinite alternate;
+        }
+
+        @keyframes cursor-jelly-glow {
+            0% { box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33; }
+            100% { box-shadow: 0 0 32px 8px #FF4FBE99, 0 0 48px 16px #FF4FBE44; }
         }
 
         .cursor-hover {
             width: 40px;
             height: 40px;
-            background-color: rgba(99, 102, 241, 0.2);
+            background-color: rgba(255, 79, 190, 0.18);
+            box-shadow: 0 0 32px 12px #FF4FBEcc, 0 0 64px 24px #FF4FBE66;
         }
 
         .photo-border {
@@ -259,18 +268,6 @@
             mask-composite: exclude;
             animation: rotate 4s linear infinite;
             background-size: 400% 400%;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-                background-position: 0% 50%;
-            }
-
-            to {
-                transform: rotate(360deg);
-                background-position: 400% 50%;
-            }
         }
 
         .particle {
@@ -512,6 +509,8 @@
     <div id="particles-container" class="fixed inset-0 pointer-events-none z-0"></div>
     <!-- Кастомный курсор -->
     <div class="custom-cursor"></div>
+    <canvas id="cursor-trail-canvas" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9998;"></canvas>
+    <canvas id="cursor-idle-canvas" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;"></canvas>
 
     <!-- Навигация -->
     <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg">
@@ -799,7 +798,7 @@
 
             <div class="text-center mt-12">
                 <a href="#"
-                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105">
+                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all">
                     Все проекты
                 </a>
             </div>
@@ -1141,8 +1140,47 @@
             });
         });
 
-        // Кастомный курсор
+        // Кастомный курсор, желейный след и анимация ожидания
         const cursor = document.querySelector('.custom-cursor');
+        const trailCanvas = document.getElementById('cursor-trail-canvas');
+        const idleCanvas = document.getElementById('cursor-idle-canvas');
+        let trailDpr = window.devicePixelRatio || 1;
+        function resizeTrail() {
+          trailCanvas.width = window.innerWidth * trailDpr;
+          trailCanvas.height = window.innerHeight * trailDpr;
+          idleCanvas.width = window.innerWidth * trailDpr;
+          idleCanvas.height = window.innerHeight * trailDpr;
+        }
+        resizeTrail();
+        window.addEventListener('resize', resizeTrail);
+
+        let cursorTrail = [];
+        const maxTrail = 16;
+
+        // Idle animation state
+        let idleTimeout = null;
+        let isIdle = false;
+        let lastCursor = { x: window.innerWidth/2, y: window.innerHeight/2 };
+
+        function showIdleAnimation() {
+          isIdle = true;
+          cursor.style.display = 'none';
+          trailCanvas.style.display = 'none';
+          idleCanvas.style.display = 'block';
+        }
+        function hideIdleAnimation() {
+          isIdle = false;
+          cursor.style.display = 'block';
+          trailCanvas.style.display = 'block';
+          idleCanvas.style.display = 'none';
+        }
+
+        function resetIdleTimer() {
+          if (idleTimeout) clearTimeout(idleTimeout);
+          hideIdleAnimation();
+          idleTimeout = setTimeout(showIdleAnimation, 5000);
+        }
+        resetIdleTimer();
 
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursor, {
@@ -1150,6 +1188,15 @@
                 y: e.clientY,
                 duration: 0.1
             });
+            cursorTrail.push({
+              x: e.clientX,
+              y: e.clientY,
+              t: Date.now()
+            });
+            if (cursorTrail.length > maxTrail) cursorTrail.shift();
+            lastCursor.x = e.clientX;
+            lastCursor.y = e.clientY;
+            resetIdleTimer();
         });
 
         document.addEventListener('mouseenter', () => {
@@ -1158,20 +1205,90 @@
 
         document.addEventListener('mouseleave', () => {
             cursor.style.display = 'none';
+            cursorTrail = [];
+            hideIdleAnimation();
         });
 
         // Анимация при наведении на интерактивные элементы
         const interactiveElements = document.querySelectorAll('a, button, .project-card');
-
         interactiveElements.forEach(element => {
             element.addEventListener('mouseenter', () => {
                 cursor.classList.add('cursor-hover');
             });
-
             element.addEventListener('mouseleave', () => {
                 cursor.classList.remove('cursor-hover');
             });
         });
+
+        // Рисуем желейный след
+        function drawCursorTrail() {
+          const ctx = trailCanvas.getContext('2d');
+          ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+          for (let i = 0; i < cursorTrail.length; i++) {
+            const p = cursorTrail[i];
+            const age = (Date.now() - p.t) / 400;
+            let alpha = 0.18 * (i + 1) / cursorTrail.length * (1 - age);
+            if (alpha < 0) alpha = 0;
+            // Радиус от 18px (голова) до 8px (хвост)
+            let r = 8 + (cursorTrail.length - i - 1) * (10 / (cursorTrail.length - 1));
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x * trailDpr, p.y * trailDpr, r * trailDpr, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgba(255, 79, 190, ${alpha})`;
+            ctx.shadowColor = '#FF4FBE';
+            ctx.shadowBlur = 6 * (i / cursorTrail.length);
+            ctx.fill();
+            ctx.restore();
+          }
+          requestAnimationFrame(drawCursorTrail);
+        }
+        drawCursorTrail();
+
+        // Idle animation: кружки по кругу
+        const idleColors = [
+          '#FF4FBE', // розовый
+          '#FFD600', // жёлтый
+          '#00C8FF', // голубой
+          '#34D399', // мятный
+        ];
+        function drawIdleAnimation() {
+          if (!isIdle) { requestAnimationFrame(drawIdleAnimation); return; }
+          const ctx = idleCanvas.getContext('2d');
+          ctx.clearRect(0, 0, idleCanvas.width, idleCanvas.height);
+          const cx = lastCursor.x * trailDpr;
+          const cy = lastCursor.y * trailDpr;
+          const t = Date.now() * 0.002;
+          const count = 8;
+          const baseR = 32 * trailDpr;
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + t;
+            // Пульсация радиуса
+            const pulse = 1 + 0.18 * Math.sin(t * 2 + i);
+            const r = baseR * pulse;
+            const x = cx + Math.cos(angle) * r;
+            const y = cy + Math.sin(angle) * r;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 10 * trailDpr * (0.8 + 0.2 * Math.sin(t * 2.5 + i)), 0, 2 * Math.PI);
+            ctx.fillStyle = idleColors[i % idleColors.length] + 'cc';
+            ctx.shadowColor = idleColors[i % idleColors.length];
+            ctx.shadowBlur = 16 * trailDpr;
+            ctx.fill();
+            ctx.restore();
+          }
+          // Центральный пустой круг с рамкой и glow (как кастомный курсор)
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, 14 * trailDpr * (0.95 + 0.05 * Math.sin(t * 2)), 0, 2 * Math.PI);
+          ctx.strokeStyle = '#FF4FBE';
+          ctx.lineWidth = 2.5 * trailDpr;
+          ctx.shadowColor = '#FF4FBE';
+          ctx.shadowBlur = 16 * trailDpr;
+          ctx.stroke();
+          ctx.restore();
+          requestAnimationFrame(drawIdleAnimation);
+        }
+        drawIdleAnimation();
 
         // Мобильное меню
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -1206,7 +1323,7 @@
         });
     </script>
     <script>
-      // Aurora Borealis: вертикальные сияющие полосы (beams) и звёзды на canvas
+      // Aurora Borealis: хаотично текущие волны (Bezier curves) и звёзды на canvas
       (function() {
         const container = document.getElementById('particles-container');
         if (!container) return;
@@ -1221,7 +1338,8 @@
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = 0;
         container.appendChild(canvas);
-        let dpr = window.devicePixelRatio || 1;
+        // Уменьшаем разрешение canvas в 2 раза для ускорения
+        let dpr = 0.5;
         function resize() {
           canvas.width = window.innerWidth * dpr;
           canvas.height = window.innerHeight * dpr;
@@ -1229,112 +1347,77 @@
         resize();
         window.addEventListener('resize', resize);
 
-        // Цвета для beams (максимально близко к скриншоту)
-        const beamColors = [
-          ['#7fffd4', '#00eaff', '#1e90ff', '#a5b4fc'], // бирюзовый-синий
-          ['#38bdf8', '#818cf8', '#a5b4fc', '#f0abfc'], // голубой-фиолетовый
-          ['#818cf8', '#a5b4fc', '#f472b6', '#f0abfc'], // фиолетовый-розовый
-          ['#6ee7b7', '#38bdf8', '#818cf8', '#f472b6'], // мятный-голубой-розовый
-          ['#a7f3d0', '#7dd3fc', '#818cf8', '#f0abfc'], // светлый мятный
-          ['#f0abfc', '#f472b6', '#a5b4fc', '#38bdf8'], // розовый-голубой
-        ];
-
-        // Звёзды
-        const stars = [];
-        for (let i = 0; i < 120; i++) {
-          stars.push({
-            x: Math.random(),
-            y: Math.random(),
-            r: Math.random() * 1.2 + 0.3,
-            alpha: Math.random() * 0.5 + 0.5
-          });
-        }
-
-        // Beams (полосы сияния)
-        const beamCount = 8;
-        const beams = [];
-        for (let i = 0; i < beamCount; i++) {
-          beams.push({
-            baseX: (i + 0.5) / beamCount + (Math.random() - 0.5) * 0.08, // немного хаотичное положение
-            width: 0.07 + Math.random() * 0.18, // разная толщина
-            color: beamColors[i % beamColors.length],
-            speed: 0.07 + Math.random() * 0.09,
-            phase: Math.random() * Math.PI * 2,
-            opacity: 0.18 + Math.random() * 0.22,
-            blur: 80 + Math.random() * 120, // разная резкость
-            angle: (Math.random() - 0.5) * 0.5 // угол наклона в радианах (от -0.25 до 0.25)
-          });
-        }
-
-        // Мышь
-        let mouseX = 0.5, mouseY = 0.5;
-        window.addEventListener('mousemove', e => {
-          mouseX = e.clientX / window.innerWidth;
-          mouseY = e.clientY / window.innerHeight;
-        });
-
-        // Анимация
-        function drawAuroraBeam(ctx, beam, t) {
-          const { baseX, width, color, phase, opacity, blur, angle } = beam;
-          const w = ctx.canvas.width;
-          const h = ctx.canvas.height;
-          // Центр полосы
-          let cx = baseX * w + Math.sin(t * beam.speed + phase + mouseX * 2) * w * 0.04;
-          // Градиент для полосы
-          const grad = ctx.createLinearGradient(cx, 0, cx, h);
-          grad.addColorStop(0, color[0]);
-          grad.addColorStop(0.3, color[1]);
-          grad.addColorStop(0.7, color[2]);
-          grad.addColorStop(1, color[3]);
-          ctx.save();
-          ctx.globalAlpha = opacity;
-          ctx.filter = `blur(${blur}px)`;
-          ctx.translate(cx, h/2);
-          ctx.rotate(angle);
-          ctx.beginPath();
-          ctx.moveTo(-width * w * 0.5, -h/2);
-          ctx.lineTo(width * w * 0.5, -h/2);
-          ctx.lineTo(width * w * 0.5, h/2);
-          ctx.lineTo(-width * w * 0.5, h/2);
-          ctx.closePath();
-          ctx.fillStyle = grad;
-          ctx.shadowColor = color[2];
-          ctx.shadowBlur = 64;
-          ctx.fill();
-          ctx.restore();
-        }
-
-        function drawStars(ctx) {
-          ctx.save();
-          ctx.globalAlpha = 0.6;
-          ctx.filter = 'blur(48px)';
-          for (const s of stars) {
-            ctx.beginPath();
-            ctx.arc(s.x * ctx.canvas.width, s.y * ctx.canvas.height, s.r * dpr, 0, 2 * Math.PI);
-            ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
-            ctx.shadowColor = '#fff';
-            ctx.shadowBlur = 8 * s.alpha;
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-
         function animate() {
           const ctx = canvas.getContext('2d');
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          // Фон — глубокий синий градиент
+          // Фон — светлый насыщенный синий градиент
           const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-          bgGrad.addColorStop(0, '#0f172a');
-          bgGrad.addColorStop(1, '#1e293b');
+          bgGrad.addColorStop(0, '#0a1023'); // почти чёрный
+          bgGrad.addColorStop(0.5, '#162447'); // глубокий синий
+          bgGrad.addColorStop(1, '#232b4d'); // тёмно-синий/фиолетовый
           ctx.fillStyle = bgGrad;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          // Звёзды
-          drawStars(ctx);
-          // Aurora beams
-          let t = Date.now() * 0.0005;
-          for (let i = 0; i < beams.length; i++) {
-            drawAuroraBeam(ctx, beams[i], t + i * 0.7);
+          // Animated Blobs — хаотичное движение, разные размеры и яркие цвета
+          if (!window._blobs) {
+            // Яркие цвета
+            const colors = [
+              'rgba(0, 200, 255, 0.55)',   // ярко-голубой
+              'rgba(255, 99, 132, 0.48)',  // розовый
+              'rgba(255, 221, 51, 0.42)',  // жёлтый
+              'rgba(52, 211, 153, 0.45)',  // мятный
+              'rgba(168, 85, 247, 0.50)',  // фиолетовый
+              'rgba(255, 159, 64, 0.40)',  // оранжевый
+              'rgba(59, 130, 246, 0.50)',  // синий
+              'rgba(16, 185, 129, 0.45)',  // зелёный
+              'rgba(236, 72, 153, 0.48)',  // ярко-розовый
+              'rgba(251, 191, 36, 0.42)'   // янтарный
+            ];
+            window._blobs = Array.from({length: 20}, (_, i) => {
+              return {
+                color: colors[i % colors.length],
+                r: 32 + Math.random() * 38, // 32–70px
+                x: Math.random(),
+                y: Math.random(),
+                vx: (Math.random() - 0.5) * 0.12,
+                vy: (Math.random() - 0.5) * 0.12,
+                deformSeed: Math.random() * 1000,
+                deformSpeed: 1 + Math.random() * 1.5
+              };
+            });
           }
+          const blobs = window._blobs;
+          let t = Date.now() * 0.0005;
+          blobs.forEach((b, i) => {
+            // Хаотичное движение центра
+            b.x += b.vx * 0.003;
+            b.y += b.vy * 0.003;
+            // Отскок от краёв
+            if (b.x < 0.08 || b.x > 0.92) b.vx *= -1;
+            if (b.y < 0.08 || b.y > 0.92) b.vy *= -1;
+            // Плавное изменение направления
+            b.vx += (Math.random() - 0.5) * 0.0015;
+            b.vy += (Math.random() - 0.5) * 0.0015;
+            b.vx = Math.max(-0.18, Math.min(0.18, b.vx));
+            b.vy = Math.max(-0.18, Math.min(0.18, b.vy));
+            // Пульсация радиуса
+            let rr = b.r * (0.90 + 0.13 * Math.sin(t * b.deformSpeed + i));
+            // Деформация формы (неровный край)
+            ctx.save();
+            ctx.beginPath();
+            let steps = 36;
+            for (let j = 0; j <= steps; j++) {
+              let ang = (Math.PI * 2 * j) / steps;
+              let deform = 1 + 0.13 * Math.sin(ang * 3 + t * 1.5 + b.deformSeed) + 0.07 * Math.cos(ang * 7 + t * 2.1 - i);
+              let x = b.x * canvas.width + Math.cos(ang) * rr * deform;
+              let y = b.y * canvas.height + Math.sin(ang) * rr * deform;
+              if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = b.color;
+            ctx.filter = 'blur(18px)';
+            ctx.fill();
+            ctx.restore();
+          });
           requestAnimationFrame(animate);
         }
         animate();
