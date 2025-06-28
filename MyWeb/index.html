@@ -503,20 +503,23 @@
             animation: bounce-small 1s infinite;
         }
 
-        #about, #about * {
-          position: relative;
-          z-index: 2;
+        #particles-container, #particles-container canvas {
+          position: fixed !important;
+          inset: 0;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 0 !important;
+          pointer-events: none !important;
         }
-        #about p, #about li, #about span, #about h2, #about h3, #about h4 {
-          color: #fff !important;
-          font-weight: 500;
-          text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        body > *:not(#particles-container):not(.custom-cursor):not(#cursor-trail-canvas):not(#cursor-idle-canvas) {
+          position: relative;
+          z-index: 1;
         }
     </style>
 </head>
 
 <body>
-    <div id="particles-container" class="fixed inset-0 pointer-events-none" style="z-index:0;"></div>
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0"></div>
     <!-- Кастомный курсор -->
     <div class="custom-cursor"></div>
     <canvas id="cursor-trail-canvas" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9998;"></canvas>
@@ -648,7 +651,7 @@
         </div>
     </section>
 
-    <!-- Секция Мои проекты -->
+    <!-- Секция проектов -->
     <section id="projects" class="py-20 bg-gray-900">
         <div class="container mx-auto px-6">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Мои <span class="text-indigo-400">проекты</span>
@@ -981,17 +984,17 @@
 
             <div class="lg:w-1/1">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">Обо <span class="text-indigo-400">мне</span></h2>
-                <p class="text-lg mb-6" style="color:#fff;">
+                <p class="text-lg mb-6 text-gray-300">
                     Я frontend-разработчик с более чем 5-летним опытом создания современных веб-приложений.
                     Моя специализация — создание интуитивно понятных, производительных интерфейсов с чистым кодом и
                     вниманием к деталям.
                 </p>
-                <p class="text-lg mb-6" style="color:#fff;">
+                <p class="text-lg mb-6 text-gray-300">
                     Когда я не пишу код, вы можете найти меня изучающим новые технологии, участвующим в open source
                     проектах
                     или делящимся знаниями через статьи и руководства.
                 </p>
-                <p class="text-lg mb-8" style="color:#fff;">
+                <p class="text-lg mb-8 text-gray-300">
                     Я верю в постоянное обучение и слежу за последними тенденциями в веб-разработке,
                     чтобы предлагать лучшие решения для моих клиентов.
                 </p>
