@@ -4,37 +4,37 @@
 
 MyWeb — это современное портфолио фронтенд-разработчика, реализованное на React + Vite с использованием Material UI, Framer Motion и кастомных стилей. Проект демонстрирует лучшие практики чистого кода, модульной архитектуры и современного UI/UX.
 
+## Live
+
+Открыть сайт: https://sanyblagorodny.github.io/My-Portfolio-website/
+
 ---
 
 ## Структура проекта
 
 ```
 MyWeb/
-├── public/                  # Публичные ассеты (доступны напрямую из браузера)
-│   └── images/              # Картинки, фото, иконки для сайта
-│
+├── CNAME                    # Настройки домена GitHub Pages (если используется)
+├── index.html               # HTML-шаблон Vite (<div id="root"></div>)
+├── index.css                # Глобальные стили на уровне корня (если используются)
+├── public/                  # Публичные ассеты (favicon, robots.txt и т.п.)
 ├── src/                     # Исходный код приложения
-│   ├── sections/            # Крупные секции сайта (Hero, About, Projects, Contact)
-│   │   ├── Hero.tsx         # Главная секция (приветствие, фото, кнопки)
-│   │   ├── About.tsx        # О себе
-│   │   ├── Projects.tsx     # Проекты/портфолио
-│   │   └── Contact.tsx      # Контакты/форма обратной связи
-│   │
-│   ├── styles/              # Глобальные стили (index.css)
-│   │   └── index.css        # Основные стили приложения
-│   │
-│   ├── App.tsx              # Корневой компонент приложения
-│   ├── main.tsx             # Точка входа (рендерит App в #root)
-│   └── vite-env.d.ts        # Типы для Vite
-│
-├── node_modules/            # Установленные зависимости (автоматически)
-├── public/                  # Публичные ассеты (favicon, robots.txt и т.д.)
-├── index.html               # HTML-шаблон для Vite (только <div id="root"></div>)
-├── package.json             # Описание зависимостей и скриптов
-├── package-lock.json        # Лок-файл npm
-├── README.md                # Описание проекта и структуры
-
-# (Возможные лишние папки, которые можно удалить: images/, components/, portfolio-3d/, projects/)
+│   ├── sections/            # Крупные секции сайта
+│   │   ├── Hero.tsx
+│   │   ├── About.tsx
+│   │   ├── Projects.tsx
+│   │   └── Contact.tsx
+│   ├── styles/
+│   │   └── index.css
+│   ├── App.tsx              # Корневой компонент
+│   ├── main.tsx             # Точка входа
+│   └── vite-env.d.ts
+├── package.json             # Скрипты и зависимости
+├── package-lock.json
+├── README.md
+├── portfolio-3d/            # Опционально: вспомогательные/демо материалы
+├── projects/                # Опционально: дополнительные ресурсы
+└── node_modules/            # Установленные зависимости
 ```
 
 ---
