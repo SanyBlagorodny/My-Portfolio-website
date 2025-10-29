@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио Frontend-разработчика</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0f0f13;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #0f0f13, #1a1b2e, #0f0f13);
+        }
+
+        /* Современные стили для текста */
+        h1,
+        h2,
+        h3,
+        h4 {
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after,
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #6366f1, transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        h1:hover::after,
+        h2:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Улучшенная анимация стрелки */
+        .scroll-arrow {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-arrow:hover {
+            transform: translateY(10px);
+        }
+
+        .scroll-arrow::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-arrow:hover::before {
+            opacity: 0.5;
+            transform: translateX(-50%) scale(1.5);
+        }
+
+        /* Современные карточки проектов */
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* Улучшенные кнопки */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .btn-hover:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        /* Анимированный градиентный текст */
+        .gradient-text {
+            background: linear-gradient(to right,
+                    #6366f1,
+                    #8b5cf6,
+                    #ec4899,
+                    #6366f1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 4s linear infinite;
+        }
+
+        @keyframes gradient {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* Улучшенные технологические иконки */
+        .tech-icon {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tech-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .tech-icon:hover::after {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .tech-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(26,26,46,0.72) 0%, rgba(22,33,62,0.68) 50%, rgba(15,52,96,0.65) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card {
+            transition: all 0.3s ease;
+            perspective: 1000px;
+        }
+
+        .project-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .project-card:hover .project-card-inner {
+            transform: rotateY(15deg) rotateX(5deg);
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 4px;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+        }
+
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid #FF4FBE;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33;
+            background: rgba(255, 79, 190, 0.10);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s, background 0.3s;
+            animation: cursor-jelly-glow 2s infinite alternate;
+        }
+
+        @keyframes cursor-jelly-glow {
+            0% { box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33; }
+            100% { box-shadow: 0 0 32px 8px #FF4FBE99, 0 0 48px 16px #FF4FBE44; }
+        }
+
+        .cursor-hover {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 79, 190, 0.18);
+            box-shadow: 0 0 32px 12px #FF4FBEcc, 0 0 64px 24px #FF4FBE66;
+        }
+
+        .photo-border {
+            position: relative;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .photo-border::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg,
+                    #6366f1,
+                    #8b5cf6,
+                    #ec4899,
+                    #6366f1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotate 4s linear infinite;
+            background-size: 400% 400%;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(99, 102, 241, 0.5);
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .photo-border {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .photo-border::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg,
+                    #6366f1,
+                    #8b5cf6,
+                    #ec4899,
+                    #6366f1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotate 4s linear infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+                background-position: 0% 50%;
+            }
+
+            to {
+                transform: rotate(360deg);
+                background-position: 400% 50%;
+            }
+        }
+
+        /* Стили для навигации */
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-link:hover {
+            color: #a5b4fc;
+            text-shadow: 0 0 10px rgba(165, 180, 252, 0.3);
+        }
+
+        /* Улучшенная анимация для логотипа */
+        .logo-text {
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text:hover {
+            text-shadow: 0 0 20px rgba(165, 180, 252, 0.5);
+        }
+
+        /* Улучшенная интерактивная стрелка */
+        .scroll-indicator {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #6366f1;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator:hover::before {
+            opacity: 1;
+            width: 60px;
+            height: 60px;
+        }
+
+        .scroll-indicator:hover svg {
+            transform: translateY(5px);
+            stroke: #a5b4fc;
+        }
+
+        .scroll-indicator .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            filter: blur(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator:hover .glow {
+            opacity: 1;
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Стили для кнопки скачивания */
+        .download-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            transition: 0.5s;
+        }
+
+        .download-button:hover::before {
+            left: 100%;
+        }
+
+        .download-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .download-button:hover svg {
+            transform: translateY(2px);
+        }
+
+        @keyframes bounce-small {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(2px);
+            }
+        }
+
+        .download-button:hover svg {
+            animation: bounce-small 1s infinite;
+        }
+
+        #particles-container,
+        #particles-container canvas,
+        #cursor-trail-canvas,
+        #cursor-idle-canvas {
+          position: fixed !important;
+          inset: 0;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 0 !important;
+          pointer-events: none !important;
+        }
+        body > *:not(#particles-container):not(.custom-cursor):not(#cursor-trail-canvas):not(#cursor-idle-canvas) {
+          position: relative;
+          z-index: 2;
+        }
+        #about p, #about li, #about span, #about h2, #about h3, #about h4 {
+          color: #fff !important;
+          font-weight: 500;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+          z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0"></div>
+    <!-- Кастомный курсор -->
+    <div class="custom-cursor"></div>
+    <canvas id="cursor-trail-canvas" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9998;"></canvas>
+    <canvas id="cursor-idle-canvas" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;"></canvas>
+
+    <!-- Навигация -->
+    <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold neon-text"><span <a href="../index.html#projects" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+                    Портфолио</span></a>
+
+                <!-- Меню для десктопа -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-white">Главная</a>
+                    <a href="#projects" class="nav-link text-white">Проекты</a>
+                    <a href="#skills" class="nav-link text-white">Навыки</a>
+                    <a href="#about" class="nav-link text-white">Обо мне</a>
+                    <a href="#contact" class="nav-link text-white">Контакты</a>
+                </div>
+
+                <!-- Кнопка мобильного меню -->
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div id="mobile-menu"
+            class="hidden md:hidden fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8">
+            <button id="close-mobile-menu" class="absolute top-6 right-6 text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <a href="#home" class="text-2xl text-white hover:text-indigo-400 transition-colors">Главная</a>
+            <a href="#projects" class="text-2xl text-white hover:text-indigo-400 transition-colors">Проекты</a>
+            <a href="#skills" class="text-2xl text-white hover:text-indigo-400 transition-colors">Навыки</a>
+            <a href="#about" class="text-2xl text-white hover:text-indigo-400 transition-colors">Обо мне</a>
+            <a href="#contact" class="text-2xl text-white hover:text-indigo-400 transition-colors">Контакты</a>
+        </div>
+    </nav>
+
+    <!-- Герой-секция -->
+    <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Плавающие 3D-объекты -->
+        <div id="threejs-container" class="absolute inset-0"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">Привет, меня зовут <span
+                            class="gradient-text">Александр Селиверстов</span></h1>
+                    <h2 class="text-2xl md:text-3xl mb-6 gradient-text">Frontend-разработчик и UI-энтузиаст</h2>
+                    <p class="text-lg md:text-xl mb-8 max-w-lg opacity-90">
+                        Я создаю красивые, интерактивные веб-приложения с использованием современных технологий, таких
+                        как React, Next.js и GSAP.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#projects"
+                            class="btn-hover bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all">
+                            Мои работы
+                        </a>
+                        <a href="#contact"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105">
+                            Связаться
+                        </a>
+                    </div>
+                </div>
+
+                <div class="md:w-1/2 flex flex-col items-center">
+                    <!-- Добавленное фото -->
+                    <div class="relative mb-8 transform hover:scale-105 transition-transform duration-500">
+                        <div class="photo-border w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
+                            <img src="./public/images/my-photo.jpg" alt="Александр Селиверстов"
+                                class="w-full h-full rounded-full object-cover filter hover:brightness-110 transition-all duration-300">
+                            <!-- Декоративные элементы -->
+                            <div
+                                class="absolute -top-4 -right-4 w-8 h-8 bg-indigo-500 rounded-full animate-ping opacity-75">
+                            </div>
+                            <div class="absolute -bottom-4 -left-4 w-6 h-6 bg-purple-500 rounded-full animate-bounce">
+                            </div>
+                            <!-- Градиентная подсветка -->
+                            <div
+                                class="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 hover:opacity-20 transition-opacity duration-300">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Блок с технологиями -->
+                    <div class="glass-card p-8 rounded-2xl max-w-md">
+                        <div class="flex flex-wrap gap-4 justify-center">
+                            <div class="tech-icon bg-gray-800 p-4 rounded-lg flex items-center justify-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                                    alt="React" class="w-12 h-12">
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-4 rounded-lg flex items-center justify-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+                                    alt="Next.js" class="w-12 h-12">
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-4 rounded-lg flex items-center justify-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                                    alt="JavaScript" class="w-12 h-12">
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-4 rounded-lg flex items-center justify-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg"
+                                    alt="Tailwind CSS" class="w-12 h-12">
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="text-gray-300 mb-4 text-lg">Посмотрите мои последние проекты ниже</p>
+                            <a href="#projects" class="scroll-indicator inline-block">
+                                <div class="glow"></div>
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция проектов -->
+    <section id="projects" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Мои <span class="text-indigo-400">проекты</span>
+            </h2>
+            <p class="text-xl text-center mb-16 max-w-1xl mx-auto text-gray-400">Вот некоторые из моих последних
+                работ<br>
+                Нажмите, чтобы узнать больше.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Проект 1 -->
+                <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="E-commerce App" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/ecommerce.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Современный интернет-магазин</h3>
+                            <p class="text-gray-400 mb-4">Полнофункциональный онлайн-магазин с корзиной и интеграцией
+                                платежей</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">React</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Next.js</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Stripe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 2 -->
+                <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="Dashboard UI" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/dashboard.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Аналитическая панель</h3>
+                            <p class="text-gray-400 mb-4">Интерактивная визуализация данных с обновлением в реальном
+                                времени</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">React</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">D3.js</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Firebase</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 3 -->
+                <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="Social App" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/social-network.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Социальная сеть</h3>
+                            <p class="text-gray-400 mb-4">Платформа для сообщества с чатом и постами в реальном времени
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">React</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">GraphQL</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">MongoDB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 4 -->
+                <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="Task Manager" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/task-manager.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Менеджер задач</h3>
+                            <p class="text-gray-400 mb-4">Приложение для продуктивности с функцией перетаскивания</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">React</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Redux</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Node.js</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 5 -->
+                 <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="Weather App" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/weather-app.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Креативное портфолио</h3>
+                            <p class="text-gray-400 mb-4">Портфолио художника с 3D-элементами и анимациями</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Three.js</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">GSAP</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">CSS3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 6 -->
+                <div class="project-card rounded-xl overflow-hidden">
+                    <div class="project-card-inner">
+                        <div class="relative group">
+                            <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                                alt="Weather App" class="w-full h-64 object-cover">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="./projects/weather-app.html"
+                                    class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full">Подробнее</a>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6">
+                            <h3 class="text-xl font-bold mb-2">Прогноз погоды</h3>
+                            <p class="text-gray-400 mb-4">Данные о погоде в реальном времени с интерактивными картами
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">React</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">API</span>
+                                <span class="bg-gray-700 text-indigo-300 px-3 py-1 rounded-full text-sm">Leaflet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="#"
+                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all">
+                    Все проекты
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция навыков -->
+    <section id="skills" class="py-20 bg-black">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Мои <span class="text-indigo-400">навыки</span>
+            </h2>
+            <p class="text-xl text-center mb-16 max-w-2xl mx-auto text-gray-400">Технологии, с которыми я работаю, и
+                уровень владения</p>
+
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-bold mb-6">Frontend <span class="text-indigo-400">разработка</span>
+                        </h3>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">HTML5 & CSS3</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">JavaScript (ES6+)</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">React & Next.js</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Управление состоянием</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-bold mb-6">UI/UX & <span class="text-indigo-400">анимация</span></h3>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Адаптивный дизайн</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Анимации GSAP</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Framer Motion</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Three.js</span>
+                                <span>70%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 glass-card p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-center">Инструменты & <span
+                        class="text-indigo-400">технологии</span></h3>
+
+                <div class="flex flex-wrap justify-center gap-6">
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                            alt="React" class="w-16 h-16 mb-2">
+                        <span>React</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+                            alt="Next.js" class="w-16 h-16 mb-2">
+                        <span>Next.js</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                            alt="JavaScript" class="w-16 h-16 mb-2">
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+                            alt="TypeScript" class="w-16 h-16 mb-2">
+                        <span>TypeScript</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg"
+                            alt="Tailwind CSS" class="w-16 h-16 mb-2">
+                        <span>Tailwind</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"
+                            class="w-16 h-16 mb-2">
+                        <span>Git</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg"
+                            alt="Figma" class="w-16 h-16 mb-2">
+                        <span>Figma</span>
+                    </div>
+                    <div class="tech-icon bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+                            alt="Node.js" class="w-16 h-16 mb-2">
+                        <span>Node.js</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция "Обо мне" -->
+    <section id="about" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 flex justify-center">
+                    <div class="relative">
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:w-1/1">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Обо <span class="text-indigo-400">мне</span></h2>
+                <p class="text-lg mb-6 text-gray-300">
+                    Я frontend-разработчик с более чем 5-летним опытом создания современных веб-приложений.
+                    Моя специализация — создание интуитивно понятных, производительных интерфейсов с чистым кодом и
+                    вниманием к деталям.
+                </p>
+                <p class="text-lg mb-6 text-gray-300">
+                    Когда я не пишу код, вы можете найти меня изучающим новые технологии, участвующим в open source
+                    проектах
+                    или делящимся знаниями через статьи и руководства.
+                </p>
+                <p class="text-lg mb-8 text-gray-300">
+                    Я верю в постоянное обучение и слежу за последними тенденциями в веб-разработке,
+                    чтобы предлагать лучшие решения для моих клиентов.
+                </p>
+
+                <div class="flex space-x-4">
+                    <a href="./documents/resume.pdf" download class="download-button">
+                        <span>Скачать резюме</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Секция контактов -->
+    <section id="contact" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Свяжитесь со <span
+                    class="text-indigo-400">мной</span></h2>
+            <p class="text-xl text-center mb-16 max-w-2xl mx-auto text-gray-400">Готов обсудить ваш проект или ответить
+                на любые вопросы</p>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Контактная информация -->
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-bold mb-6">Контактная информация</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4 cursor-pointer group">
+                                <svg class="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to=aseliverstov0056@gmail.com&su=Запрос на сотрудничество (Frontend/Backend)&body=Здравствуйте, Александр,"
+                                    target="_blank" class="text-gray-300 hover:text-indigo-400 transition-colors"
+                                    title="Написать письмо через Gmail">
+                                    aseliverstov0056@gmail.com
+                                </a>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                                </svg>
+                                <a href="https://t.me/SanyBlagorodniy" target="_blank"
+                                    class="text-gray-300 hover:text-indigo-400 " contact-link">@SanyBlagorodniy</a>
+                            </div>
+                        </div>
+
+                        <!-- Социальные сети -->
+                        <div class="mt-8">
+                            <h4 class="text-xl font-semibold mb-4">Социальные сети</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://github.com/SanyBlagorodny" target="_blank"
+                                    class="btn-hover p-2 glass-card rounded-lg">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                                <a href="https://linkedin.com/in/your-profile" target="_blank"
+                                    class="btn-hover p-2 glass-card rounded-lg">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Форма обратной связи -->
+                    <div class="glass-card p-8 rounded-2xl">
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300">Имя</label>
+                                <input type="text" id="name" name="name"
+                                    class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                                <input type="email" id="email" name="email"
+                                    class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-300">Сообщение</label>
+                                <textarea id="message" name="message" rows="4"
+                                    class="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="btn-hover w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all">
+                                Отправить сообщение
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Анимации при скролле
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Анимация появления элементов при скролле
+            gsap.utils.toArray('.project-card, .glass-card, .tech-icon').forEach(element => {
+                gsap.from(element, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top bottom-=100",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+
+            // Анимация заголовков
+            gsap.utils.toArray('h2').forEach(heading => {
+                gsap.from(heading, {
+                    x: -100,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: heading,
+                        start: "top bottom-=100",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+
+            // Плавная анимация прогресс-баров
+            gsap.utils.toArray('.skill-progress').forEach(progress => {
+                gsap.to(progress, {
+                    width: progress.getAttribute('data-progress') + '%',
+                    duration: 1.5,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: progress,
+                        start: "top bottom-=100",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+        });
+
+        // Кастомный курсор, желейный след и анимация ожидания
+        const cursor = document.querySelector('.custom-cursor');
+        const trailCanvas = document.getElementById('cursor-trail-canvas');
+        const idleCanvas = document.getElementById('cursor-idle-canvas');
+        let trailDpr = window.devicePixelRatio || 1;
+        function resizeTrail() {
+          trailCanvas.width = window.innerWidth * trailDpr;
+          trailCanvas.height = window.innerHeight * trailDpr;
+          idleCanvas.width = window.innerWidth * trailDpr;
+          idleCanvas.height = window.innerHeight * trailDpr;
+        }
+        resizeTrail();
+        window.addEventListener('resize', resizeTrail);
+
+        let cursorTrail = [];
+        const maxTrail = 16;
+
+        // Idle animation state
+        let idleTimeout = null;
+        let isIdle = false;
+        let lastCursor = { x: window.innerWidth/2, y: window.innerHeight/2 };
+
+        function showIdleAnimation() {
+          isIdle = true;
+          cursor.style.display = 'none';
+          trailCanvas.style.display = 'none';
+          idleCanvas.style.display = 'block';
+        }
+        function hideIdleAnimation() {
+          isIdle = false;
+          cursor.style.display = 'block';
+          trailCanvas.style.display = 'block';
+          idleCanvas.style.display = 'none';
+        }
+
+        function resetIdleTimer() {
+          if (idleTimeout) clearTimeout(idleTimeout);
+          hideIdleAnimation();
+          idleTimeout = setTimeout(showIdleAnimation, 5000);
+        }
+        resetIdleTimer();
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1
+            });
+            cursorTrail.push({
+              x: e.clientX,
+              y: e.clientY,
+              t: Date.now()
+            });
+            if (cursorTrail.length > maxTrail) cursorTrail.shift();
+            lastCursor.x = e.clientX;
+            lastCursor.y = e.clientY;
+            resetIdleTimer();
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.display = 'block';
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursor.style.display = 'none';
+            cursorTrail = [];
+            hideIdleAnimation();
+        });
+
+        // Анимация при наведении на интерактивные элементы
+        const interactiveElements = document.querySelectorAll('a, button, .project-card');
+        interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.classList.add('cursor-hover');
+            });
+            element.addEventListener('mouseleave', () => {
+                cursor.classList.remove('cursor-hover');
+            });
+        });
+
+        // Рисуем желейный след
+        function drawCursorTrail() {
+          const ctx = trailCanvas.getContext('2d');
+          ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+          for (let i = 0; i < cursorTrail.length; i++) {
+            const p = cursorTrail[i];
+            const age = (Date.now() - p.t) / 400;
+            let alpha = 0.18 * (i + 1) / cursorTrail.length * (1 - age);
+            if (alpha < 0) alpha = 0;
+            // Радиус от 18px (голова) до 8px (хвост)
+            let r = 8 + (cursorTrail.length - i - 1) * (10 / (cursorTrail.length - 1));
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x * trailDpr, p.y * trailDpr, r * trailDpr, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgba(255, 79, 190, ${alpha})`;
+            ctx.shadowColor = '#FF4FBE';
+            ctx.shadowBlur = 6 * (i / cursorTrail.length);
+            ctx.fill();
+            ctx.restore();
+          }
+          requestAnimationFrame(drawCursorTrail);
+        }
+        drawCursorTrail();
+
+        // Idle animation: кружки по кругу
+        const idleColors = [
+          '#FF4FBE', // розовый
+          '#FFD600', // жёлтый
+          '#00C8FF', // голубой
+          '#34D399', // мятный
+        ];
+        function drawIdleAnimation() {
+          if (!isIdle) { requestAnimationFrame(drawIdleAnimation); return; }
+          const ctx = idleCanvas.getContext('2d');
+          ctx.clearRect(0, 0, idleCanvas.width, idleCanvas.height);
+          const cx = lastCursor.x * trailDpr;
+          const cy = lastCursor.y * trailDpr;
+          const t = Date.now() * 0.002;
+          const count = 8;
+          const baseR = 32 * trailDpr;
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + t;
+            // Пульсация радиуса
+            const pulse = 1 + 0.18 * Math.sin(t * 2 + i);
+            const r = baseR * pulse;
+            const x = cx + Math.cos(angle) * r;
+            const y = cy + Math.sin(angle) * r;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 10 * trailDpr * (0.8 + 0.2 * Math.sin(t * 2.5 + i)), 0, 2 * Math.PI);
+            ctx.fillStyle = idleColors[i % idleColors.length] + 'cc';
+            ctx.shadowColor = idleColors[i % idleColors.length];
+            ctx.shadowBlur = 16 * trailDpr;
+            ctx.fill();
+            ctx.restore();
+          }
+          // Центральный пустой круг с рамкой и glow (как кастомный курсор)
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, 14 * trailDpr * (0.95 + 0.05 * Math.sin(t * 2)), 0, 2 * Math.PI);
+          ctx.strokeStyle = '#FF4FBE';
+          ctx.lineWidth = 2.5 * trailDpr;
+          ctx.shadowColor = '#FF4FBE';
+          ctx.shadowBlur = 16 * trailDpr;
+          ctx.stroke();
+          ctx.restore();
+          requestAnimationFrame(drawIdleAnimation);
+        }
+        drawIdleAnimation();
+
+        // Мобильное меню
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            gsap.from(mobileMenu, {
+                opacity: 0,
+                duration: 0.3
+            });
+        });
+
+        closeMobileMenuButton.addEventListener('click', () => {
+            gsap.to(mobileMenu, {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Обработка формы контактов
+        const contactForm = document.getElementById('contact-form');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Здесь можно добавить логику отправки формы
+            alert('Форма отправлена! (Демо)');
+        });
+    </script>
+    <script>
+      // Aurora Borealis: хаотично текущие волны (Bezier curves) и звёзды на canvas
+      (function() {
+        const container = document.getElementById('particles-container');
+        if (!container) return;
+        container.innerHTML = '';
+        // Canvas
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'absolute';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = 0;
+        container.appendChild(canvas);
+        // Уменьшаем разрешение canvas в 2 раза для ускорения
+        let dpr = 0.5;
+        function resize() {
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function animate() {
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          // Фон — светлый насыщенный синий градиент
+          const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+          bgGrad.addColorStop(0, '#0a1023'); // почти чёрный
+          bgGrad.addColorStop(0.5, '#162447'); // глубокий синий
+          bgGrad.addColorStop(1, '#232b4d'); // тёмно-синий/фиолетовый
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          // Animated Blobs — хаотичное движение, разные размеры и яркие цвета
+          if (!window._blobs) {
+            // Яркие цвета
+            const colors = [
+              'rgba(0, 200, 255, 0.55)',   // ярко-голубой
+              'rgba(255, 99, 132, 0.48)',  // розовый
+              'rgba(255, 221, 51, 0.42)',  // жёлтый
+              'rgba(52, 211, 153, 0.45)',  // мятный
+              'rgba(168, 85, 247, 0.50)',  // фиолетовый
+              'rgba(255, 159, 64, 0.40)',  // оранжевый
+              'rgba(59, 130, 246, 0.50)',  // синий
+              'rgba(16, 185, 129, 0.45)',  // зелёный
+              'rgba(236, 72, 153, 0.48)',  // ярко-розовый
+              'rgba(251, 191, 36, 0.42)'   // янтарный
+            ];
+            window._blobs = Array.from({length: 20}, (_, i) => {
+              return {
+                color: colors[i % colors.length],
+                r: 32 + Math.random() * 38, // 32–70px
+                x: Math.random(),
+                y: Math.random(),
+                vx: (Math.random() - 0.5) * 0.12,
+                vy: (Math.random() - 0.5) * 0.12,
+                deformSeed: Math.random() * 1000,
+                deformSpeed: 1 + Math.random() * 1.5
+              };
+            });
+          }
+          const blobs = window._blobs;
+          let t = Date.now() * 0.0005;
+          blobs.forEach((b, i) => {
+            // Хаотичное движение центра
+            b.x += b.vx * 0.003;
+            b.y += b.vy * 0.003;
+            // Отскок от краёв
+            if (b.x < 0.08 || b.x > 0.92) b.vx *= -1;
+            if (b.y < 0.08 || b.y > 0.92) b.vy *= -1;
+            // Плавное изменение направления
+            b.vx += (Math.random() - 0.5) * 0.0015;
+            b.vy += (Math.random() - 0.5) * 0.0015;
+            b.vx = Math.max(-0.18, Math.min(0.18, b.vx));
+            b.vy = Math.max(-0.18, Math.min(0.18, b.vy));
+            // Пульсация радиуса
+            let rr = b.r * (0.90 + 0.13 * Math.sin(t * b.deformSpeed + i));
+            // Деформация формы (неровный край)
+            ctx.save();
+            ctx.beginPath();
+            let steps = 36;
+            for (let j = 0; j <= steps; j++) {
+              let ang = (Math.PI * 2 * j) / steps;
+              let deform = 1 + 0.13 * Math.sin(ang * 3 + t * 1.5 + b.deformSeed) + 0.07 * Math.cos(ang * 7 + t * 2.1 - i);
+              let x = b.x * canvas.width + Math.cos(ang) * rr * deform;
+              let y = b.y * canvas.height + Math.sin(ang) * rr * deform;
+              if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = b.color;
+            ctx.filter = 'blur(18px)';
+            ctx.fill();
+            ctx.restore();
+          });
+          requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+    </script>
+</body>
+
+</html>
