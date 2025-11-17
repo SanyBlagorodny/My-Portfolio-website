@@ -733,7 +733,7 @@
     <nav class="fixed w-full z-50 bg-black bg-opacity-90 backdrop-filter backdrop-blur-lg border-b border-gray-800" style="min-height: 60px;">
         <div class="container mx-auto px-4 py-3" style="display: flex; justify-content: space-between; align-items: center; min-height: 60px;">
             <div class="flex items-center space-x-2 sm:space-x-4">
-                <img src="public/images/AS.jpg.jpg" alt="AS" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover">
+                <img src="./images/AS.jpg.jpg" alt="AS" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover">
                 <a href="#" class="text-lg sm:text-2xl font-bold neon-text">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Портфолио</span>
                 </a>
@@ -809,7 +809,7 @@
                     <!-- Добавленное фото -->
                     <div class="relative mb-8 transform hover:scale-105 transition-transform duration-500">
                         <div class="photo-border w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
-                            <img src="public/images/my-photo.jpg" alt="Александр Селиверстов"
+                            <img src="./images/my-photo.jpg" alt="Александр Селиверстов"
                                 class="w-full h-full rounded-full object-cover filter hover:brightness-110 transition-all duration-300">
                             <!-- Декоративные элементы -->
                             <div
@@ -1909,6 +1909,22 @@
           });
         });
       }
+    </script>
+<!-- Скрипт для коррекции путей на GitHub Pages -->
+    <script>
+        (function() {
+            // Проверяем, находимся ли мы на GitHub Pages
+            if (window.location.hostname === 'sanyblagorodny.github.io') {
+                // Заменяем все пути к изображениям
+                document.addEventListener('DOMContentLoaded', function() {
+                    const images = document.querySelectorAll('img[src^="./images/"]');
+                    images.forEach(img => {
+                        const originalSrc = img.getAttribute('src');
+                        img.setAttribute('src', '/My-Portfolio-website/' + originalSrc.replace('./', ''));
+                    });
+                });
+            }
+        })();
     </script>
 </body>
 
