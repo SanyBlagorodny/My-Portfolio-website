@@ -1594,10 +1594,8 @@
                 alert('Форма отправлена! (Демо)');
             });
 
-        }); // DOMContentLoaded
-
-        // Кастомный курсор, желейный след и анимация ожидания (отдельный блок)
-        setTimeout(() => {
+            // Кастомный курсор, желейный след и анимация ожидания (внутри DOMContentLoaded)
+            setTimeout(() => {
             (function() {
                 console.log('Initializing cursor...');
                 // Добавляем инициализацию canvas для курсора
@@ -1892,6 +1890,7 @@
         }, 100);
       })();
     }, 200);
+        }); // Конец DOMContentLoaded
     </script>
 </body>
 
