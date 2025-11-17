@@ -13,7 +13,7 @@
             if (window.location.hostname === 'sanyblagorodny.github.io') {
                 // Функция для замены путей
                 function fixImagePaths() {
-                    const images = document.querySelectorAll('img[src^="public/images/"]');
+                    const images = document.querySelectorAll('img[src^="public/"]');
                     images.forEach(img => {
                         const originalSrc = img.getAttribute('src');
                         img.setAttribute('src', '/My-Portfolio-website/' + originalSrc);
@@ -1919,26 +1919,6 @@
       })();
     }, 200);
         }); // Конец DOMContentLoaded
-    </script>
-    
-    <!-- Скрипт для коррекции путей на GitHub Pages -->
-    <script>
-      // Автоматическая коррекция путей только на GitHub Pages
-      if (window.location.hostname === 'sanyblagorodny.github.io') {
-        document.addEventListener('DOMContentLoaded', function() {
-          const base = '/My-Portfolio-website/';
-          
-          // Корректируем все пути к изображениям
-          document.querySelectorAll('img[src^="public/"]').forEach(img => {
-            img.src = base + img.src;
-          });
-          
-          // Корректируем все пути к проектам
-          document.querySelectorAll('a[href^="projects/"]').forEach(link => {
-            link.href = base + link.href;
-          });
-        });
-      }
     </script>
 </body>
 
