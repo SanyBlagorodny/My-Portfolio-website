@@ -20,10 +20,20 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #0f0f13;
+            background-color: transparent;
             color: #e0e0e0;
             overflow-x: hidden;
-            background: linear-gradient(to bottom, #0f0f13, #1a1b2e, #0f0f13);
+            cursor: none !important;
+        }
+
+        /* Скрываем системный курсор на всех элементах */
+        * {
+            cursor: none !important;
+        }
+
+        /* Показываем системный курсор только для интерактивных элементов при наведении */
+        a:hover, button:hover, input:hover, textarea:hover, select:hover, .project-card:hover {
+            cursor: pointer !important;
         }
 
         /* Мобильные стили */
@@ -271,7 +281,7 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -371,17 +381,16 @@
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33;
+            z-index: 99999;
+            box-shadow: 0 0 48px 12px #FF4FBE66, 0 0 96px 24px #FF4FBE33;
             background: rgba(255, 79, 190, 0.10);
-            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s, background 0.3s;
+            transition: width 0.3s ease, height 0.3s ease, box-shadow 0.3s, background 0.3s;
             animation: cursor-jelly-glow 2s infinite alternate;
         }
 
         @keyframes cursor-jelly-glow {
-            0% { box-shadow: 0 0 16px 4px #FF4FBE66, 0 0 32px 8px #FF4FBE33; }
-            100% { box-shadow: 0 0 32px 8px #FF4FBE99, 0 0 48px 16px #FF4FBE44; }
+            0% { box-shadow: 0 0 48px 12px #FF4FBE66, 0 0 96px 24px #FF4FBE33; }
+            100% { box-shadow: 0 0 64px 16px #FF4FBE99, 0 0 120px 32px #FF4FBE44; }
         }
 
         .cursor-hover {
@@ -714,6 +723,27 @@
 </head>
 
 <body>
+    <script>
+        // Автоматическая коррекция путей для GitHub Pages
+        (function() {
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            if (isGitHubPages) {
+                const basePath = '/My-Portfolio-website/';
+                // Корректируем все изображения
+                document.addEventListener('DOMContentLoaded', function() {
+                    const images = document.querySelectorAll('img[src^="./public/"]');
+                    images.forEach(img => {
+                        img.src = img.src.replace('./public/', basePath + 'public/');
+                    });
+                    // Корректируем все ссылки
+                    const links = document.querySelectorAll('a[href^="./projects/"]');
+                    links.forEach(link => {
+                        link.href = link.href.replace('./projects/', basePath + 'projects/');
+                    });
+                });
+            }
+        })();
+    </script>
     <div id="particles-container" class="fixed inset-0 pointer-events-none" style="z-index: -1;"></div>
     <!-- Кастомный курсор -->
     <div class="custom-cursor"></div>
@@ -725,7 +755,7 @@
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <img src="public/images/AS.jpg.jpg" alt="AS" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover">
+                    <img src="./public/images/AS.jpg.jpg" alt="AS" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover">
                     <a href="#" class="text-lg sm:text-2xl font-bold neon-text">
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Портфолио</span>
                     </a>
@@ -853,7 +883,7 @@
     </section>
 
     <!-- Секция проектов -->
-    <section id="projects" class="py-20 bg-gray-900 relative">
+    <section id="projects" class="py-20 bg-gray-900 bg-opacity-80 relative">
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
         <div class="container mx-auto px-4 sm:px-6">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">Мои <span class="text-indigo-400">проекты</span>
@@ -1022,7 +1052,7 @@
     </section>
 
     <!-- Секция навыков -->
-    <section id="skills" class="py-20 bg-black relative">
+    <section id="skills" class="py-20 bg-black bg-opacity-80 relative">
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
         <div class="container mx-auto px-4 sm:px-6">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">Мои <span class="text-indigo-400">навыки</span>
@@ -1206,7 +1236,7 @@
         <div class="container mx-auto px-4 sm:px-6">
             <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
                 <div class="lg:w-1/2 w-full flex justify-center">
-                    <img src="public/images/my-photo.jpg" 
+                    <img src="./public/images/my-photo.jpg" 
                          alt="Фото профиля" 
                          class="rounded-full shadow-2xl mx-auto w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-cover">
                 </div>
@@ -1585,17 +1615,35 @@
                 alert('Форма отправлена! (Демо)');
             });
 
-            // Кастомный курсор, желейный след и анимация ожидания
+        }); // DOMContentLoaded
 
-            // обавляем инициализацию canvas для курсора
-            const cursor = document.querySelector('.custom-cursor');
-            const trailCanvas = document.getElementById('cursor-trail-canvas');
-            const idleCanvas = document.getElementById('idle-canvas');
+        // Кастомный курсор, желейный след и анимация ожидания (отдельный блок)
+        setTimeout(() => {
+            (function() {
+                console.log('Initializing cursor...');
+                // Добавляем инициализацию canvas для курсора
+                const cursor = document.querySelector('.custom-cursor');
+                const trailCanvas = document.getElementById('cursor-trail-canvas');
+                const idleCanvas = document.getElementById('cursor-idle-canvas');
 
-            if (!cursor || !trailCanvas || !idleCanvas) {
-              console.error('Cursor elements not found');
-              return;
-            }
+                console.log('Cursor elements:', { cursor: !!cursor, trailCanvas: !!trailCanvas, idleCanvas: !!idleCanvas });
+
+                if (!cursor || !trailCanvas || !idleCanvas) {
+                  console.error('Cursor elements not found');
+                  return;
+                }
+
+                // Принудительно делаем курсор видимым
+                cursor.style.display = 'block';
+                trailCanvas.style.display = 'block';
+                idleCanvas.style.display = 'none';
+                console.log('Cursor display set to block');
+
+                // Устанавливаем начальную позицию курсора в центр экрана
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                cursor.style.transform = `translate(-50%, -50%) translate(${centerX}px, ${centerY}px)`;
+                console.log('Cursor initial position set to center:', centerX, centerY);
 
             const trailDpr = 0.5;
 
@@ -1637,11 +1685,9 @@
             setTimeout(resetIdleTimer, 100);
 
             document.addEventListener('mousemove', (e) => {
-                gsap.to(cursor, {
-                    x: e.clientX,
-                    y: e.clientY,
-                    duration: 0.1
-                });
+                // Устанавливаем позицию курсора напрямую
+                cursor.style.transform = `translate(-50%, -50%) translate(${e.clientX}px, ${e.clientY}px)`;
+                
                 cursorTrail.push({
                   x: e.clientX,
                   y: e.clientY,
@@ -1743,12 +1789,15 @@
               requestAnimationFrame(drawIdleAnimation);
             }
             drawIdleAnimation();
-        });
-    </script>
-    <script>
-      // Aurora Borealis: хаотично текущие волны (Bezier curves) и звёзды на canvas
+        })();
+        }, 100);
+
+    // Анимация частиц - лавовая лампа (с задержкой)
+    setTimeout(() => {
       (function() {
+        console.log('Initializing particles...');
         const container = document.getElementById('particles-container');
+        console.log('Particles container:', !!container);
         if (!container) return;
         container.innerHTML = '';
         
@@ -1761,8 +1810,9 @@
         canvas.style.height = '100vh';
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = '-1';
-        canvas.style.opacity = '0.8'; // Добавляем прозрачности для лучшего эффекта
+        canvas.style.opacity = '0.9'; // Яркая прозрачность
         container.appendChild(canvas);
+        console.log('Particles canvas created');
         
         // Уменьшаем разрешение canvas в 2 раза для ускорения
         let dpr = 0.5;
@@ -1785,43 +1835,52 @@
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           // Animated Blobs — хаотичное движение, разные размеры и яркие цвета
           if (!window._blobs) {
-            // Яркие цвета
+            // Радужные цвета
             const colors = [
-              'rgba(0, 200, 255, 0.55)',   // ярко-голубой
-              'rgba(255, 99, 132, 0.48)',  // розовый
-              'rgba(255, 221, 51, 0.42)',  // жёлтый
-              'rgba(52, 211, 153, 0.45)',  // мятный
-              'rgba(168, 85, 247, 0.50)',  // фиолетовый
-              'rgba(255, 159, 64, 0.40)',  // оранжевый
-              'rgba(59, 130, 246, 0.50)',  // синий
-              'rgba(16, 185, 129, 0.45)',  // зелёный
-              'rgba(236, 72, 153, 0.48)',  // ярко-розовый
-              'rgba(251, 191, 36, 0.42)'   // янтарный
+              'rgba(255, 0, 0, 0.9)',       // красный
+              'rgba(255, 127, 0, 0.9)',     // оранжевый  
+              'rgba(255, 255, 0, 0.9)',     // желтый
+              'rgba(0, 255, 0, 0.9)',       // зеленый
+              'rgba(0, 0, 255, 0.9)',       // синий
+              'rgba(75, 0, 130, 0.9)',      // индиго
+              'rgba(148, 0, 211, 0.9)',     // фиолетовый
+              'rgba(255, 20, 147, 0.9)',    // розовый
+              'rgba(0, 255, 255, 0.9)',     // голубой
+              'rgba(255, 105, 180, 0.9)',   // горячий розовый
+              'rgba(50, 205, 50, 0.9)',     // лаймовый
+              'rgba(255, 215, 0, 0.9)'      // золотой
             ];
-            window._blobs = Array.from({length: 20}, (_, i) => {
+            window._blobs = Array.from({length: 24}, (_, i) => {
+              // Разные размеры: маленькие, средние, большие
+              const sizeCategories = [
+                { min: 20, max: 40, speed: 0.24 },   // маленькие - быстрые
+                { min: 40, max: 80, speed: 0.16 },   // средние - средние
+                { min: 80, max: 120, speed: 0.10 }   // большие - медленные
+              ];
+              const category = sizeCategories[i % 3];
               return {
                 color: colors[i % colors.length],
-                r: 32 + Math.random() * 38, // 32–70px
+                r: category.min + Math.random() * (category.max - category.min),
                 x: Math.random(),
                 y: Math.random(),
-                vx: (Math.random() - 0.5) * 0.12,
-                vy: (Math.random() - 0.5) * 0.12,
+                vx: (Math.random() - 0.5) * category.speed,
+                vy: (Math.random() - 0.5) * category.speed,
                 deformSeed: Math.random() * 1000,
-                deformSpeed: 1 + Math.random() * 1.5
+                deformSpeed: 0.8 + Math.random() * 1.0 // Медленнее деформация
               };
             });
           }
           const blobs = window._blobs;
           let t = Date.now() * 0.0005;
           blobs.forEach((b, i) => {
-            // Хаотичное движение центра
-            b.x += b.vx * 0.003;
-            b.y += b.vy * 0.003;
+            // Хаотичное движение центра - быстрее
+            b.x += b.vx * 0.004;
+            b.y += b.vy * 0.004;
             // Отскок от краёв
             if (b.x < 0.08 || b.x > 0.92) b.vx *= -1;
             if (b.y < 0.08 || b.y > 0.92) b.vy *= -1;
-            // Плавное изменение направления
-            b.vx += (Math.random() - 0.5) * 0.0015;
+            // Плавное изменение направления - медленнее
+            b.vx += (Math.random() - 0.5) * 0.001;
             b.vy += (Math.random() - 0.5) * 0.0015;
             b.vx = Math.max(-0.18, Math.min(0.18, b.vx));
             b.vy = Math.max(-0.18, Math.min(0.18, b.vy));
@@ -1853,6 +1912,7 @@
           animate();
         }, 100);
       })();
+    }, 200);
     </script>
 </body>
 
