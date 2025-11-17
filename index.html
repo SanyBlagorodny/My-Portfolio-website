@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -227,6 +227,11 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .tech-icon::after {
@@ -251,6 +256,12 @@
         .tech-icon:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .tech-icon span {
+            margin-top: auto;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .hero-gradient {
@@ -301,6 +312,7 @@
             
             .tech-icon {
                 padding: 0.5rem !important;
+                min-height: 70px !important;
             }
             
             .tech-icon img {
@@ -320,6 +332,7 @@
             
             .tech-icon {
                 padding: 0.375rem !important;
+                min-height: 65px !important;
             }
             
             .tech-icon img {
@@ -635,7 +648,16 @@
             animation: bounce-small 1s infinite;
         }
 
-        #particles-container,
+        #particles-container {
+          position: fixed !important;
+          inset: 0;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: -1 !important;
+          pointer-events: none !important;
+          overflow: hidden;
+        }
+        
         #particles-container canvas {
           position: fixed !important;
           inset: 0;
@@ -660,6 +682,33 @@
           color: #fff !important;
           font-weight: 500;
           text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+        
+        /* Мобильное меню - гарантированное отображение поверх всех элементов */
+        #mobile-menu {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            background: rgba(0, 0, 0, 0.98) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        #mobile-menu button#close-mobile-menu {
+            z-index: 100000 !important;
+        }
+        
+        /* Гарантируем, что все элементы под мобильным меню не перекрывают его */
+        body.mobile-menu-open *:not(#mobile-menu):not(#mobile-menu *) {
+            pointer-events: none !important;
+        }
+        
+        body.mobile-menu-open #mobile-menu {
+            pointer-events: auto !important;
         }
     </style>
 </head>
@@ -701,24 +750,26 @@
                 </button>
             </div>
         </div>
-
-        <!-- Мобильное меню -->
-        <div id="mobile-menu"
-            class="hidden md:hidden fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-            <a href="#home" class="text-2xl text-white hover:text-indigo-400 transition-colors">Главная</a>
-            <a href="#projects" class="text-2xl text-white hover:text-indigo-400 transition-colors">Проекты</a>
-            <a href="#skills" class="text-2xl text-white hover:text-indigo-400 transition-colors">Навыки</a>
-            <a href="#about" class="text-2xl text-white hover:text-indigo-400 transition-colors">Обо мне</a>
-            <a href="#contact" class="text-2xl text-white hover:text-indigo-400 transition-colors">Контакты</a>
-        </div>
     </nav>
+
+    <!-- Мобильное меню -->
+    <div id="mobile-menu"
+        class="hidden md:hidden fixed inset-0 bg-black bg-opacity-95 z-[9999] flex flex-col items-center justify-center">
+        <button id="close-mobile-menu" class="absolute top-4 right-4 text-white z-[10000]">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                </path>
+            </svg>
+        </button>
+        <div class="flex flex-col items-center justify-center space-y-4 w-full h-full px-4">
+            <a href="#home" class="text-xl text-white hover:text-indigo-400 transition-colors py-2">Главная</a>
+            <a href="#projects" class="text-xl text-white hover:text-indigo-400 transition-colors py-2">Проекты</a>
+            <a href="#skills" class="text-xl text-white hover:text-indigo-400 transition-colors py-2">Навыки</a>
+            <a href="#about" class="text-xl text-white hover:text-indigo-400 transition-colors py-2">Обо мне</a>
+            <a href="#contact" class="text-xl text-white hover:text-indigo-400 transition-colors py-2">Контакты</a>
+        </div>
+    </div>
 
     <!-- Герой-секция -->
     <section id="home" class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -1073,51 +1124,74 @@
                     </div>
                 </div>
 
-                <div class="lg:w-1/2">
-                    <div class="mt-12 glass-card p-6 sm:p-8 rounded-2xl">
-                        <h3 class="text-xl sm:text-2xl font-bold mb-6 text-center">Инструменты & <span
-                                class="text-indigo-400">технологии</span></h3>
+                </div>
 
-                        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6">
+            <!-- Технологии -->
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 mt-12">
+                <div class="lg:w-full">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-bold mb-6">Инструменты & <span class="text-indigo-400">технологии</span></h3>
+                        
+                        <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-                                    alt="React" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="React" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">React</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
-                                    alt="Next.js" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="Next.js" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">Next.js</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-                                    alt="JavaScript" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="JavaScript" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">JavaScript</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
-                                    alt="TypeScript" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="TypeScript" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">TypeScript</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg"
-                                    alt="Tailwind CSS" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="Tailwind CSS" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">Tailwind</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"
-                                    class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">Git</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg"
-                                    alt="Figma" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="Figma" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">Figma</span>
                             </div>
                             <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
-                                    alt="Node.js" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 mb-2">
+                                    alt="Node.js" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
                                 <span class="text-xs sm:text-sm">Node.js</span>
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+                                    alt="HTML5" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
+                                <span class="text-xs sm:text-sm">HTML5</span>
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+                                    alt="CSS3" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
+                                <span class="text-xs sm:text-sm">CSS3</span>
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg"
+                                    alt="Sass" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
+                                <span class="text-xs sm:text-sm">Sass</span>
+                            </div>
+                            <div class="tech-icon bg-gray-800 p-3 sm:p-4 rounded-lg flex flex-col items-center">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg"
+                                    alt="Webpack" class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mb-2">
+                                <span class="text-xs sm:text-sm">Webpack</span>
                             </div>
                         </div>
                     </div>
@@ -1302,188 +1376,373 @@
                     }
                 });
             });
-        });
 
-        // Кастомный курсор, желейный след и анимация ожидания
-        const cursor = document.querySelector('.custom-cursor');
-        const trailCanvas = document.getElementById('cursor-trail-canvas');
-        const idleCanvas = document.getElementById('cursor-idle-canvas');
-        let trailDpr = window.devicePixelRatio || 1;
-        function resizeTrail() {
-          trailCanvas.width = window.innerWidth * trailDpr;
-          trailCanvas.height = window.innerHeight * trailDpr;
-          idleCanvas.width = window.innerWidth * trailDpr;
-          idleCanvas.height = window.innerHeight * trailDpr;
-        }
-        resizeTrail();
-        window.addEventListener('resize', resizeTrail);
+            // Проверка наличия GSAP
+            if (typeof gsap === 'undefined') {
+                console.error('GSAP library not loaded! Mobile menu animations will not work.');
+                alert('Ошибка: библиотека анимации не загружена. Пожалуйста, обновите страницу.');
+                return;
+            }
 
-        let cursorTrail = [];
-        const maxTrail = 16;
+            // Мобильное меню
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-        // Idle animation state
-        let idleTimeout = null;
-        let isIdle = false;
-        let lastCursor = { x: window.innerWidth/2, y: window.innerHeight/2 };
-
-        function showIdleAnimation() {
-          isIdle = true;
-          cursor.style.display = 'none';
-          trailCanvas.style.display = 'none';
-          idleCanvas.style.display = 'block';
-        }
-        function hideIdleAnimation() {
-          isIdle = false;
-          cursor.style.display = 'block';
-          trailCanvas.style.display = 'block';
-          idleCanvas.style.display = 'none';
-        }
-
-        function resetIdleTimer() {
-          if (idleTimeout) clearTimeout(idleTimeout);
-          hideIdleAnimation();
-          idleTimeout = setTimeout(showIdleAnimation, 5000);
-        }
-        setTimeout(resetIdleTimer, 100);
-
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, {
-                x: e.clientX,
-                y: e.clientY,
-                duration: 0.1
+            console.log('Mobile menu elements:', {
+                button: mobileMenuButton,
+                closeButton: closeMobileMenuButton,
+                menu: mobileMenu
             });
-            cursorTrail.push({
-              x: e.clientX,
-              y: e.clientY,
-              t: Date.now()
-            });
-            if (cursorTrail.length > maxTrail) cursorTrail.shift();
-            lastCursor.x = e.clientX;
-            lastCursor.y = e.clientY;
-            resetIdleTimer();
-        });
 
-        document.addEventListener('mouseenter', () => {
-            cursor.style.display = 'block';
-        });
+            // Проверка наличия всех элементов
+            if (!mobileMenuButton) {
+                console.error('Mobile menu button not found!');
+                return;
+            }
+            if (!mobileMenu) {
+                console.error('Mobile menu not found!');
+                return;
+            }
+            if (!closeMobileMenuButton) {
+                console.warn('Close mobile menu button not found, but continuing...');
+            }
 
-        document.addEventListener('mouseleave', () => {
-            cursor.style.display = 'none';
-            cursorTrail = [];
-            hideIdleAnimation();
-        });
-
-        // Анимация при наведении на интерактивные элементы
-        const interactiveElements = document.querySelectorAll('a, button, .project-card');
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                cursor.classList.add('cursor-hover');
-            });
-            element.addEventListener('mouseleave', () => {
-                cursor.classList.remove('cursor-hover');
-            });
-        });
-
-        // Рисуем желейный след
-        function drawCursorTrail() {
-          const ctx = trailCanvas.getContext('2d');
-          ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-          for (let i = 0; i < cursorTrail.length; i++) {
-            const p = cursorTrail[i];
-            const age = (Date.now() - p.t) / 400;
-            let alpha = 0.18 * (i + 1) / cursorTrail.length * (1 - age);
-            if (alpha < 0) alpha = 0;
-            // Радиус от 18px (голова) до 8px (хвост)
-            let r = 8 + (cursorTrail.length - i - 1) * (10 / (cursorTrail.length - 1));
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(p.x * trailDpr, p.y * trailDpr, r * trailDpr, 0, 2 * Math.PI);
-            ctx.fillStyle = `rgba(255, 79, 190, ${alpha})`;
-            ctx.shadowColor = '#FF4FBE';
-            ctx.shadowBlur = 6 * (i / cursorTrail.length);
-            ctx.fill();
-            ctx.restore();
-          }
-          requestAnimationFrame(drawCursorTrail);
-        }
-        drawCursorTrail();
-
-        // Idle animation: кружки по кругу
-        const idleColors = [
-          '#FF4FBE', // розовый
-          '#FFD600', // жёлтый
-          '#00C8FF', // голубой
-          '#34D399', // мятный
-        ];
-        function drawIdleAnimation() {
-          if (!isIdle) { requestAnimationFrame(drawIdleAnimation); return; }
-          const ctx = idleCanvas.getContext('2d');
-          ctx.clearRect(0, 0, idleCanvas.width, idleCanvas.height);
-          const cx = lastCursor.x * trailDpr;
-          const cy = lastCursor.y * trailDpr;
-          const t = Date.now() * 0.002;
-          const count = 8;
-          const baseR = 32 * trailDpr;
-          for (let i = 0; i < count; i++) {
-            const angle = (Math.PI * 2 * i) / count + t;
-            // Пульсация радиуса
-            const pulse = 1 + 0.18 * Math.sin(t * 2 + i);
-            const r = baseR * pulse;
-            const x = cx + Math.cos(angle) * r;
-            const y = cy + Math.sin(angle) * r;
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(x, y, 10 * trailDpr * (0.8 + 0.2 * Math.sin(t * 2.5 + i)), 0, 2 * Math.PI);
-            ctx.fillStyle = idleColors[i % idleColors.length] + 'cc';
-            ctx.shadowColor = idleColors[i % idleColors.length];
-            ctx.shadowBlur = 16 * trailDpr;
-            ctx.fill();
-            ctx.restore();
-          }
-          // Центральный пустой круг с рамкой и glow (как кастомный курсор)
-          ctx.save();
-          ctx.beginPath();
-          ctx.arc(cx, cy, 14 * trailDpr * (0.95 + 0.05 * Math.sin(t * 2)), 0, 2 * Math.PI);
-          ctx.strokeStyle = '#FF4FBE';
-          ctx.lineWidth = 2.5 * trailDpr;
-          ctx.shadowColor = '#FF4FBE';
-          ctx.shadowBlur = 16 * trailDpr;
-          ctx.stroke();
-          ctx.restore();
-          requestAnimationFrame(drawIdleAnimation);
-        }
-        drawIdleAnimation();
-
-        // Мобильное меню
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.remove('hidden');
-            gsap.from(mobileMenu, {
-                opacity: 0,
-                duration: 0.3
-            });
-        });
-
-        closeMobileMenuButton.addEventListener('click', () => {
-            gsap.to(mobileMenu, {
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => {
+            // Простая тестовая функция без GSAP
+            function testMobileMenu() {
+                console.log('=== Testing mobile menu without GSAP ===');
+                
+                if (!mobileMenuButton || !mobileMenu) {
+                    console.error('Mobile menu elements not found!');
+                    return;
+                }
+                
+                const isHidden = mobileMenu.classList.contains('hidden');
+                console.log('Current state:', isHidden ? 'hidden' : 'visible');
+                
+                if (isHidden) {
+                    console.log('Showing menu without animation...');
+                    mobileMenu.classList.remove('hidden');
+                    document.body.classList.add('mobile-menu-open');
+                } else {
+                    console.log('Hiding menu without animation...');
                     mobileMenu.classList.add('hidden');
+                    document.body.classList.remove('mobile-menu-open');
+                }
+            }
+
+            // Добавляем тестовую функцию в глобальную область для ручного вызова
+            window.testMobileMenu = testMobileMenu;
+            console.log('Test function available: window.testMobileMenu()');
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', (e) => {
+                    console.log('=== Burger menu clicked ===');
+                    console.log('Menu current state:', {
+                        isHidden: mobileMenu.classList.contains('hidden'),
+                        classes: mobileMenu.className,
+                        bodyHasClass: document.body.classList.contains('mobile-menu-open')
+                    });
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Если меню уже открыто, сначала закроем его
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        console.log('Menu is already open, closing first...');
+                        gsap.to(mobileMenu, {
+                            opacity: 0,
+                            duration: 0.2,
+                            onComplete: () => {
+                                mobileMenu.classList.add('hidden');
+                                document.body.classList.remove('mobile-menu-open');
+                                // Сразу открываем снова
+                                setTimeout(() => {
+                                    openMobileMenu();
+                                }, 50);
+                            }
+                        });
+                    } else {
+                        console.log('Opening menu...');
+                        openMobileMenu();
+                    }
+                });
+            }
+
+            function openMobileMenu() {
+                try {
+                    console.log('Opening mobile menu...');
+                    mobileMenu.classList.remove('hidden');
+                    document.body.classList.add('mobile-menu-open');
+                    
+                    // Убедимся, что меню видимо
+                    gsap.set(mobileMenu, { opacity: 0 });
+                    gsap.to(mobileMenu, {
+                        opacity: 1,
+                        duration: 0.3,
+                        onComplete: () => {
+                            console.log('Menu opened successfully');
+                            console.log('Menu final state:', {
+                                isHidden: mobileMenu.classList.contains('hidden'),
+                                opacity: gsap.getProperty(mobileMenu, "opacity"),
+                                bodyHasClass: document.body.classList.contains('mobile-menu-open')
+                            });
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error opening mobile menu:', error);
+                }
+            }
+
+            function closeMobileMenu() {
+                try {
+                    console.log('Closing mobile menu...');
+                    gsap.to(mobileMenu, {
+                        opacity: 0,
+                        duration: 0.3,
+                        onComplete: () => {
+                            mobileMenu.classList.add('hidden');
+                            document.body.classList.remove('mobile-menu-open');
+                            console.log('Menu closed successfully');
+                            console.log('Menu final state:', {
+                                isHidden: mobileMenu.classList.contains('hidden'),
+                                opacity: gsap.getProperty(mobileMenu, "opacity"),
+                                bodyHasClass: document.body.classList.contains('mobile-menu-open')
+                            });
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error closing mobile menu:', error);
+                }
+            }
+
+            if (closeMobileMenuButton) {
+                closeMobileMenuButton.addEventListener('click', (e) => {
+                    console.log('Close button clicked');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeMobileMenu();
+                });
+            }
+
+            // Закрытие мобильного меню по клавише Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    console.log('Escape key pressed, closing menu...');
+                    closeMobileMenu();
                 }
             });
-        });
 
-        // Обработка формы контактов
-        const contactForm = document.getElementById('contact-form');
+            // Закрытие мобильного меню при клику вне его области
+            document.addEventListener('click', (e) => {
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    const isClickInsideMenu = mobileMenu.contains(e.target);
+                    const isClickOnBurgerButton = mobileMenuButton && mobileMenuButton.contains(e.target);
+                    
+                    if (!isClickInsideMenu && !isClickOnBurgerButton) {
+                        console.log('Click outside menu, closing...');
+                        closeMobileMenu();
+                    }
+                }
+            });
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Здесь можно добавить логику отправки формы
-            alert('Форма отправлена! (Демо)');
+            // Закрытие мобильного меню при клике на ссылки
+            if (mobileMenu) {
+                const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+                console.log('Mobile menu links found:', mobileMenuLinks.length);
+                
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        console.log('Menu link clicked:', e.target.textContent);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Получаем целевой секцию
+                        const targetId = link.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+                        
+                        // Закрываем меню с анимацией
+                        closeMobileMenu();
+                        
+                        // Плавная прокрутка к секции после закрытия меню
+                        if (targetSection) {
+                            setTimeout(() => {
+                                targetSection.scrollIntoView({
+                                    behavior: 'smooth'
+                                });
+                            }, 400); // Увеличил задержку до полного закрытия меню
+                        }
+                    });
+                });
+            }
+
+            // Обработка формы контактов
+            const contactForm = document.getElementById('contact-form');
+
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Добавить логику отправки формы
+                alert('Форма отправлена! (Демо)');
+            });
+
+            // Кастомный курсор, желейный след и анимация ожидания
+
+            // обавляем инициализацию canvas для курсора
+            const cursor = document.querySelector('.custom-cursor');
+            const trailCanvas = document.getElementById('cursor-trail-canvas');
+            const idleCanvas = document.getElementById('idle-canvas');
+
+            if (!cursor || !trailCanvas || !idleCanvas) {
+              console.error('Cursor elements not found');
+              return;
+            }
+
+            const trailDpr = 0.5;
+
+            function resizeTrail() {
+              trailCanvas.width = window.innerWidth * trailDpr;
+              trailCanvas.height = window.innerHeight * trailDpr;
+              idleCanvas.width = window.innerWidth * trailDpr;
+              idleCanvas.height = window.innerHeight * trailDpr;
+            }
+            resizeTrail();
+            window.addEventListener('resize', resizeTrail);
+
+            let cursorTrail = [];
+            const maxTrail = 16;
+
+            // Idle animation state
+            let idleTimeout = null;
+            let isIdle = false;
+            let lastCursor = { x: window.innerWidth/2, y: window.innerHeight/2 };
+
+            function showIdleAnimation() {
+              isIdle = true;
+              cursor.style.display = 'none';
+              trailCanvas.style.display = 'none';
+              idleCanvas.style.display = 'block';
+            }
+            function hideIdleAnimation() {
+              isIdle = false;
+              cursor.style.display = 'block';
+              trailCanvas.style.display = 'block';
+              idleCanvas.style.display = 'none';
+            }
+
+            function resetIdleTimer() {
+              if (idleTimeout) clearTimeout(idleTimeout);
+              hideIdleAnimation();
+              idleTimeout = setTimeout(showIdleAnimation, 5000);
+            }
+            setTimeout(resetIdleTimer, 100);
+
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    duration: 0.1
+                });
+                cursorTrail.push({
+                  x: e.clientX,
+                  y: e.clientY,
+                  t: Date.now()
+                });
+                if (cursorTrail.length > maxTrail) cursorTrail.shift();
+                lastCursor.x = e.clientX;
+                lastCursor.y = e.clientY;
+                resetIdleTimer();
+            });
+
+            document.addEventListener('mouseenter', () => {
+                cursor.style.display = 'block';
+            });
+
+            document.addEventListener('mouseleave', () => {
+                cursor.style.display = 'none';
+                cursorTrail = [];
+                hideIdleAnimation();
+            });
+
+            // Анимация при наведении на интерактивные элементы
+            const interactiveElements = document.querySelectorAll('a, button, .project-card');
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    cursor.classList.add('cursor-hover');
+                });
+                element.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('cursor-hover');
+                });
+            });
+
+            // Рисуем желейный след
+            function drawCursorTrail() {
+              const ctx = trailCanvas.getContext('2d');
+              ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+              for (let i = 0; i < cursorTrail.length; i++) {
+                const p = cursorTrail[i];
+                const age = (Date.now() - p.t) / 400;
+                let alpha = 0.18 * (i + 1) / cursorTrail.length * (1 - age);
+                if (alpha < 0) alpha = 0;
+                // Радиус от 18px (голова) до 8px (хвост)
+                let r = 8 + (cursorTrail.length - i - 1) * (10 / (cursorTrail.length - 1));
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(p.x * trailDpr, p.y * trailDpr, r * trailDpr, 0, 2 * Math.PI);
+                ctx.fillStyle = `rgba(255, 79, 190, ${alpha})`;
+                ctx.shadowColor = '#FF4FBE';
+                ctx.shadowBlur = 6 * (i / cursorTrail.length);
+                ctx.fill();
+                ctx.restore();
+              }
+              requestAnimationFrame(drawCursorTrail);
+            }
+            drawCursorTrail();
+
+            // Idle animation: кружки по кругу
+            const idleColors = [
+              '#FF4FBE', // розовый
+              '#FFD600', // жёлтый
+              '#00C8FF', // голубой
+              '#34D399', // мятный
+            ];
+            function drawIdleAnimation() {
+              if (!isIdle) { requestAnimationFrame(drawIdleAnimation); return; }
+              const ctx = idleCanvas.getContext('2d');
+              ctx.clearRect(0, 0, idleCanvas.width, idleCanvas.height);
+              const cx = lastCursor.x * trailDpr;
+              const cy = lastCursor.y * trailDpr;
+              const t = Date.now() * 0.002;
+              const count = 8;
+              const baseR = 32 * trailDpr;
+              for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count + t;
+                // Пульсация радиуса
+                const pulse = 1 + 0.18 * Math.sin(t * 2 + i);
+                const r = baseR * pulse;
+                const x = cx + Math.cos(angle) * r;
+                const y = cy + Math.sin(angle) * r;
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y, 10 * trailDpr * (0.8 + 0.2 * Math.sin(t * 2.5 + i)), 0, 2 * Math.PI);
+                ctx.fillStyle = idleColors[i % idleColors.length] + 'cc';
+                ctx.shadowColor = idleColors[i % idleColors.length];
+                ctx.shadowBlur = 16 * trailDpr;
+                ctx.fill();
+                ctx.restore();
+              }
+              // Центральный пустой круг с рамкой и glow (как кастомный курсор)
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(cx, cy, 14 * trailDpr * (0.95 + 0.05 * Math.sin(t * 2)), 0, 2 * Math.PI);
+              ctx.strokeStyle = '#FF4FBE';
+              ctx.lineWidth = 2.5 * trailDpr;
+              ctx.shadowColor = '#FF4FBE';
+              ctx.shadowBlur = 16 * trailDpr;
+              ctx.stroke();
+              ctx.restore();
+              requestAnimationFrame(drawIdleAnimation);
+            }
+            drawIdleAnimation();
         });
     </script>
     <script>
@@ -1492,16 +1751,19 @@
         const container = document.getElementById('particles-container');
         if (!container) return;
         container.innerHTML = '';
-        // Canvas
+        
+        // Canvas с правильными стилями
         const canvas = document.createElement('canvas');
-        canvas.style.position = 'absolute';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
         canvas.style.width = '100vw';
         canvas.style.height = '100vh';
         canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = 0;
+        canvas.style.zIndex = '-1';
+        canvas.style.opacity = '0.8'; // Добавляем прозрачности для лучшего эффекта
         container.appendChild(canvas);
+        
         // Уменьшаем разрешение canvas в 2 раза для ускорения
         let dpr = 0.5;
         function resize() {
@@ -1584,7 +1846,12 @@
           });
           requestAnimationFrame(animate);
         }
-        animate();
+        
+        // Запускаем анимацию с небольшой задержкой для уверенной инициализации
+        setTimeout(() => {
+          console.log('Starting particle animation...');
+          animate();
+        }, 100);
       })();
     </script>
 </body>
