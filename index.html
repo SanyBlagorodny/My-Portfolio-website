@@ -4,7 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио Frontend-разработчика</title>
+    <title>Александр Селиверстов - Frontend Разработчик</title>
+    
+    <!-- Скрипт для коррекции путей на GitHub Pages -->
+    <script>
+        (function() {
+            // Проверяем, находимся ли мы на GitHub Pages
+            if (window.location.hostname === 'sanyblagorodny.github.io') {
+                // Функция для замены путей
+                function fixImagePaths() {
+                    const images = document.querySelectorAll('img[src^="public/images/"]');
+                    images.forEach(img => {
+                        const originalSrc = img.getAttribute('src');
+                        img.setAttribute('src', '/My-Portfolio-website/' + originalSrc);
+                    });
+                }
+                
+                // Запускаем немедленно
+                fixImagePaths();
+                
+                // И также после загрузки DOM
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', fixImagePaths);
+                } else {
+                    fixImagePaths();
+                }
+                
+                // И при загрузке всех изображений
+                window.addEventListener('load', fixImagePaths);
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -1909,22 +1939,6 @@
           });
         });
       }
-    </script>
-<!-- Скрипт для коррекции путей на GitHub Pages -->
-    <script>
-        (function() {
-            // Проверяем, находимся ли мы на GitHub Pages
-            if (window.location.hostname === 'sanyblagorodny.github.io') {
-                // Заменяем все пути к изображениям
-                document.addEventListener('DOMContentLoaded', function() {
-                    const images = document.querySelectorAll('img[src^="public/images/"]');
-                    images.forEach(img => {
-                        const originalSrc = img.getAttribute('src');
-                        img.setAttribute('src', '/My-Portfolio-website/' + originalSrc);
-                    });
-                });
-            }
-        })();
     </script>
 </body>
 
